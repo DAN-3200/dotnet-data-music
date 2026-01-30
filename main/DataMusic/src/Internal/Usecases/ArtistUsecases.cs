@@ -4,28 +4,36 @@ using DataMusic.Internal.Ports;
 
 namespace DataMusic.Internal.Usecases;
 
-public class ArtistUsecase(IPortsGenericRepo<Artist> repo, IServiceHttp service)
+public class ArtistUsecase(
+  IPortsGenericRepo<Artist> repoArtist,
+  IServiceHttp service
+)
 {
   public async Task SaveArtist(string name)
   {
-    // formar query
-    var url = $"";
-    // tratar erro
-    var result = await service.RequestExternalApi<MapArtistJson>(url);
-    var artist = new Artist(result!.ArtistId, result.ArtistName, result.PrimaryGenreName, result.ArtistLinkUrl);
-    await repo.Save(artist);
+    if (await repoArtist.GetByName(name) is not null)
+      throw new ArgumentException("Esse Artista já está presente no sistema");
+
+    var urlQuery = $"https://itunes.apple.com/search?term={name}&media=music&entity=musicArtist&limit=1";
+    var result = await service.RequestExternalApi<MapArtistJson>(urlQuery);
+
+    if (result is null)
+      throw new ArgumentException("Não há Artista com tal nome");
+
+    var artist = new Artist(result.ArtistId, result.ArtistName, result.PrimaryGenreName, result.ArtistLinkUrl);
+    await repoArtist.Save(artist);
   }
 
-  public async Task<Artist> GetArtist(string name)
+  public async Task<Artist> GetArtist(QueryArtist info)
   {
-    var artist = await repo.GetByName(name);
-    if (artist is null) throw new ArgumentException("Não há Artista com tal nome");
+    var artist = await repoArtist.GetByFilter(info);
+    if (artist is null) throw new ArgumentException("Não foi possível achar Artista(s) com tal consulta");
     return artist;
   }
 
   public async Task EditArtist(string id, EditArtist info)
   {
-    var artist = await repo.GetById(id);
+    var artist = await repoArtist.GetById(id);
     if (artist is null) throw new ArgumentException("Não há Artista com tal nome");
 
     if (info.Name is not null)
@@ -43,11 +51,11 @@ public class ArtistUsecase(IPortsGenericRepo<Artist> repo, IServiceHttp service)
       artist.SetViewUrl(info.ViewUrl);
     }
 
-    await repo.Edit(id, artist);
+    await repoArtist.Edit(id, artist);
   }
 
   public async Task DeleteArtist(string name)
   {
-    await repo.DeleteByName(name);
+    await repoArtist.DeleteByName(name);
   }
 }

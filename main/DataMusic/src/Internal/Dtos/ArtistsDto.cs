@@ -6,6 +6,11 @@ public record EditArtist(
   string? ViewUrl
 );
 
+public record QueryArtist(
+  string? Name,
+  string? Genrer
+);
+
 public record MapArtistJson(
   int ArtistId,
   string ArtistName,

@@ -6,14 +6,15 @@ public class Artist(
   string name,
   string? genrer,
   string? viewUrl,
-  DateTime? createdAt)
+  DateTime? createdAt
+)
 {
   public string? Id { get; private set; } = id;
   public int OriginalId { get; private set; } = originalId;
   public string Name { get; private set; } = name;
   public string? Genrer { get; private set; } = genrer;
   public string? ViewUrl { get; private set; } = viewUrl;
-  public DateTime? CreatedAt { get; private set; } = createdAt;
+  public DateTime? CreatedAt { get; private set; } = createdAt ?? DateTime.UtcNow;
 
   public Artist(int originalId, string name, string? genrer, string? viewUrl) :
     this(id: null, originalId, name, genrer, viewUrl, createdAt: null)
