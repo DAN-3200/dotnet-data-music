@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/main/">
+    <Project Path="main/DataMusic/DataMusic.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/DataMusic.Tests/DataMusic.Tests.csproj" />
+  </Folder>
+</Solution>
