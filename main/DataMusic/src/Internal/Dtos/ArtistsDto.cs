@@ -1,19 +1,19 @@
 namespace DataMusic.Internal.Dtos;
 
 public record EditArtist(
-  string? Name,
-  string? Genrer,
-  string? ViewUrl
+    string? Name,
+    string? Genrer,
+    string? ViewUrl
 );
 
 public record QueryArtist(
-  string? Name,
-  string? Genrer
+    string? Name,
+    string? Genrer
 );
 
 public record MapArtistJson(
-  int ArtistId,
-  string ArtistName,
-  string ArtistLinkUrl,
-  string PrimaryGenreName
+    int ArtistId,
+    string ArtistName,
+    string ArtistLinkUrl,
+    string PrimaryGenreName
 );
